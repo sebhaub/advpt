@@ -14,16 +14,21 @@ class Matrix(object):
         self.columns = columns
         self.cells = [0] * (self.rows * self.columns)
 
+    def _assertIsValidIndex(self, row, column):
+        row_too_low = row < 0
+        row_too_high = row >= self.rows
+        column_too_low = column < 0
+        column_too_high = column >= self.columns
+
+        if(any([row_too_low, row_too_high, column_too_low, column_too_high])):
+            raise IndexError('Index row={} column={} is outside of matrix.', row, column)
+
     def setEntry(self, i, j, val):
-        if i >= self.rows or j >= self.columns:
-            print("Error, wrong index in setentry " + str(i) + " " + str(j))
-            exit(1)
+        self._assertIsValidIndex(i, j)
         self.cells[i * self.columns + j] = val
 
     def getEntry(self, i, j):
-        if i >= self.rows or j >= self.columns:
-            print("Error, wrong index in setentry " + str(i) + " " + str(j))
-            exit(1)
+        self._assertIsValidIndex(i, j)
         return self.cells[i * self.columns + j]
 
     def __mul__(self, other):
