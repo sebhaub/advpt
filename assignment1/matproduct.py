@@ -1,4 +1,12 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+__authors__ = ['Jonas Gröger <jonas.groeger@gmail.com>',
+               'Sebastian Haubner <seb.haubner@gmail.com>']
+
+
 class Matrix(object):
+    '''The representation of a 2D matrix.'''
     def __init__(self, lines, columns):
         self.lines = lines
         self.columns = columns
@@ -29,7 +37,7 @@ class Matrix(object):
                 for k in range(0, self.columns):
                     tmpSelf = self.getEntry(i, k)
                     tmpOther = other.getEntry(k, j)
-                    tmp += tmpSelf*tmpOther
+                    tmp += tmpSelf * tmpOther
                 result.setEntry(i, j, tmp)
 
         return result
