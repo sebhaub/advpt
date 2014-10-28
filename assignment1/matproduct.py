@@ -1,37 +1,36 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-__authors__ = ['Jonas Gröger <jonas.groeger@gmail.com>',
-               'Sebastian Haubner <seb.haubner@gmail.com>']
+__authors__ = ['Jonas Gröger <jonas.groeger@gmail.com>', 'Sebastian Haubner <seb.haubner@gmail.com>']
 
+raw_input = input
 
 class Matrix(object):
     '''The representation of a 2D matrix.'''
-    def __init__(self, lines, columns):
-        self.lines = lines
+    def __init__(self, rows, columns):
+        self.rows = rows
         self.columns = columns
-        self.Values = [0] * (self.lines * self.columns)
+        self.cells = [0] * (self.rows * self.columns)
 
     def setEntry(self, i, j, val):
-        if i >= self.lines or j >= self.columns:
+        if i >= self.rows or j >= self.columns:
             print("Error, wrong index in setentry " + str(i) + " " + str(j))
             exit(1)
-        self.Values[i * self.columns + j] = val;
+        self.cells[i * self.columns + j] = val
 
     def getEntry(self, i, j):
-        if i >= self.lines or j >= self.columns:
+        if i >= self.rows or j >= self.columns:
             print("Error, wrong index in setentry " + str(i) + " " + str(j))
             exit(1)
-        return self.Values[i * self.columns + j];
-
+        return self.cells[i * self.columns + j]
 
     def __mul__(self, other):
-        if self.columns != other.lines:
-            print"Diese Matrizen koennen leider nicht miteinander multipliziert werden !"
+        if self.columns != other.rows:
+            print("Diese Matrizen koennen leider nicht miteinander multipliziert werden !")
             exit(1)
 
-        result = Matrix(self.lines, other.columns)
-        for i in range(0, self.lines):
+        result = Matrix(self.rows, other.columns)
+        for i in range(0, self.rows):
             for j in range(0, other.columns):
                 tmp = result.getEntry(i, j)
                 for k in range(0, self.columns):
@@ -42,12 +41,14 @@ class Matrix(object):
 
         return result
 
-    def printIt(self):
-        for i in range(0, self.lines):
+    def __str__(self):
+        result = ''
+        for i in range(0, self.rows):
             for j in range(0, self.columns):
-                print("[" + str(self.Values[j + i * self.columns]) + "] "),
-            print("")
+                result += "[" + str(self.cells[j + i * self.columns]) + "] "
+            result += ''
 
+        return result
 
 print("Please enter s1 (the Lines of Matrix A) :")
 s1 = int(raw_input(""))
@@ -67,7 +68,7 @@ for i in range(0, s1):
         A.setEntry(i, j, val)
 
 print ("---- Matrix A is ----")
-A.printIt()
+print(A)
 print("-----------------------")
 
 print("Now enter all the value of of Matrix B (press return after each")
@@ -78,15 +79,11 @@ for i in range(0, s2):
         B.setEntry(i, j, val)
 
 print ("---- Matrix B is ----")
-B.printIt()
+print(B)
 print("-----------------------")
 
 print ("A*B =")
 
 C = A * B
 
-C.printIt()
-
-
-
-
+print(C)
