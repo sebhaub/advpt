@@ -57,41 +57,41 @@ class Matrix(object):
 
         return result
 
+if __name__ == '__main__':
+    print("Please enter s1 (the Lines of Matrix A) :")
+    s1 = int(raw_input(""))
+    print("Now enter s2 (the Lines of Matrix B, and the Columns of Matrix A) :")
+    s2 = int(raw_input(""))
+    print("and now enter s3 (the columns of Matrix B")
+    s3 = int(raw_input(""))
 
-print("Please enter s1 (the Lines of Matrix A) :")
-s1 = int(raw_input(""))
-print("Now enter s2 (the Lines of Matrix B, and the Columns of Matrix A) :")
-s2 = int(raw_input(""))
-print("and now enter s3 (the columns of Matrix B")
-s3 = int(raw_input(""))
+    A = Matrix(s1, s2)
+    B = Matrix(s2, s3)
 
-A = Matrix(s1, s2)
-B = Matrix(s2, s3)
+    print("Now enter all the value of of Matrix A (press return after each")
 
-print("Now enter all the value of of Matrix A (press return after each")
+    for i in range(0, s1):
+        for j in range(0, s2):
+            val = int(raw_input(""))
+            A.setEntry(i, j, val)
 
-for i in range(0, s1):
-    for j in range(0, s2):
-        val = int(raw_input(""))
-        A.setEntry(i, j, val)
+    print("---- Matrix A is ----")
+    print(A)
+    print("-----------------------")
 
-print("---- Matrix A is ----")
-print(A)
-print("-----------------------")
+    print("Now enter all the value of of Matrix B (press return after each")
 
-print("Now enter all the value of of Matrix B (press return after each")
+    for i in range(0, s2):
+        for j in range(0, s3):
+            val = int(raw_input(""))
+            B.setEntry(i, j, val)
 
-for i in range(0, s2):
-    for j in range(0, s3):
-        val = int(raw_input(""))
-        B.setEntry(i, j, val)
+    print("---- Matrix B is ----")
+    print(B)
+    print("-----------------------")
 
-print("---- Matrix B is ----")
-print(B)
-print("-----------------------")
+    print("A*B =")
 
-print("A*B =")
+    C = A * B
 
-C = A * B
-
-print(C)
+    print(C)
