@@ -5,8 +5,10 @@ __authors__ = ['Jonas Gröger <jonas.groeger@gmail.com>', 'Sebastian Haubner <se
 
 raw_input = input
 
+
 class Matrix(object):
     '''The representation of a 2D matrix.'''
+
     def __init__(self, rows, columns):
         self.rows = rows
         self.columns = columns
@@ -50,6 +52,7 @@ class Matrix(object):
 
         return result
 
+
 print("Please enter s1 (the Lines of Matrix A) :")
 s1 = int(raw_input(""))
 print("Now enter s2 (the Lines of Matrix B, and the Columns of Matrix A) :")
@@ -67,7 +70,7 @@ for i in range(0, s1):
         val = int(raw_input(""))
         A.setEntry(i, j, val)
 
-print ("---- Matrix A is ----")
+print("---- Matrix A is ----")
 print(A)
 print("-----------------------")
 
@@ -78,11 +81,11 @@ for i in range(0, s2):
         val = int(raw_input(""))
         B.setEntry(i, j, val)
 
-print ("---- Matrix B is ----")
+print("---- Matrix B is ----")
 print(B)
 print("-----------------------")
 
-print ("A*B =")
+print("A*B =")
 
 C = A * B
 
