@@ -1,50 +1,55 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 __authors__ = ['Jonas Gröger <jonas.groeger@gmail.com>', 'Sebastian Haubner <seb.haubner@gmail.com>']
 
-raw_input = input
+# Python 2/3 compatible input, see http://stackoverflow.com/a/5868543/488265
+# Python 2: Rename raw_input to input
+# Python 3: This will do nothing.
+try:
+    input = raw_input
+except NameError:
+    pass
 
 
 class Matrix(object):
-    '''The representation of a 2D matrix.'''
+    """The representation of a 2D matrix."""
 
     def __init__(self, rows, columns):
         self.rows = rows
         self.columns = columns
-        self.cells = [0] * (self.rows * self.columns)
+        self.cells = [0 for _ in range(self.rows * self.columns)]
 
-    def _assertIsValidIndex(self, row, column):
-        row_too_low = row < 0
-        row_too_high = row >= self.rows
-        column_too_low = column < 0
-        column_too_high = column >= self.columns
-
-        if(any([row_too_low, row_too_high, column_too_low, column_too_high])):
+    def _assert_is_valid_index(self, column, row):
+        row_inside_matrix = 0 <= row < self.rows
+        column_inside_matrix = 0 <= column < self.columns
+        if not all([row_inside_matrix, column_inside_matrix]):
             raise IndexError('Index row={} column={} is outside of matrix.', row, column)
 
     def setEntry(self, i, j, val):
-        self._assertIsValidIndex(i, j)
+        self._assert_is_valid_index(i, j)
         self.cells[i * self.columns + j] = val
 
-    def getEntry(self, i, j):
-        self._assertIsValidIndex(i, j)
-        return self.cells[i * self.columns + j]
+    def _assert_is_multiplyable(self, other_matrix):
+        if self.columns != other_matrix.rows:
+            raise ValueError('The column count of the first matrix must be equal to the row count of the second.')
 
-    def __mul__(self, other):
-        if self.columns != other.rows:
-            print("Diese Matrizen koennen leider nicht miteinander multipliziert werden !")
-            exit(1)
+    def getEntry(self, row, column):
+        self._assert_is_valid_index(row, column)
+        return self.cells[row * self.columns + column]
 
-        result = Matrix(self.rows, other.columns)
-        for i in range(0, self.rows):
-            for j in range(0, other.columns):
-                tmp = result.getEntry(i, j)
-                for k in range(0, self.columns):
-                    tmpSelf = self.getEntry(i, k)
-                    tmpOther = other.getEntry(k, j)
-                    tmp += tmpSelf * tmpOther
-                result.setEntry(i, j, tmp)
+    def __mul__(self, other_matrix):
+        self._assert_is_multiplyable(other_matrix)
+
+        result = Matrix(self.rows, other_matrix.columns)
+        for row in range(self.rows):
+            for column in range(other_matrix.columns):
+                tmp = result.getEntry(row, column)
+                for k in range(self.columns):
+                    tmp_self = self.getEntry(row, k)
+                    temp_other = other_matrix.getEntry(k, column)
+                    tmp += tmp_self * temp_other
+                result.setEntry(row, column, tmp)
 
         return result
 
@@ -57,22 +62,20 @@ class Matrix(object):
 
         return result
 
+
 if __name__ == '__main__':
-    print("Please enter s1 (the Lines of Matrix A) :")
-    s1 = int(raw_input(""))
-    print("Now enter s2 (the Lines of Matrix B, and the Columns of Matrix A) :")
-    s2 = int(raw_input(""))
-    print("and now enter s3 (the columns of Matrix B")
-    s3 = int(raw_input(""))
+    s1 = int(input("Matrix A columns: "))
+    s2 = int(input("Matrix A columns / Matrix B rows: "))
+    s3 = int(input("Matrix B columns: "))
 
     A = Matrix(s1, s2)
     B = Matrix(s2, s3)
 
-    print("Now enter all the value of of Matrix A (press return after each")
+    print("Now enter all the value of of Matrix A (press return after each):")
 
     for i in range(0, s1):
         for j in range(0, s2):
-            val = int(raw_input(""))
+            val = int(input())
             A.setEntry(i, j, val)
 
     print("---- Matrix A is ----")
@@ -83,7 +86,7 @@ if __name__ == '__main__':
 
     for i in range(0, s2):
         for j in range(0, s3):
-            val = int(raw_input(""))
+            val = int(input())
             B.setEntry(i, j, val)
 
     print("---- Matrix B is ----")
