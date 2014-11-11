@@ -10,10 +10,29 @@ class Matrix{
 			assert(rows > 0 && cols > 0);
 			this->rows = rows;
 			this->columns = cols;
+			this->cells = new int[rows*cols];
+			for(int i = 0; i < rows*cols; i++){
+				cells[i] = 2;
+			}
 		}
-	
-	protected:
-	
+		
+		~Matrix(){
+			delete[] cells;
+		}
+		
+		friend std::ostream& operator<<(std::ostream& os, const Matrix& obj)
+		{
+			for(int i = 0; i < obj.rows; i++){
+				for(int j = 0; j < obj.columns; j++){
+					os << obj.cells[i * obj.columns + j] + " a ";
+				}
+				os <<  "\n";
+			}
+			return os;
+		}
+		
+
+			
 	private:
 		int* cells;
 		int rows;
@@ -32,7 +51,8 @@ int main(int argc, char **argv)
 	cin >> b;
 	
 	Matrix m = Matrix(a, b);
-	
+	cout << m << endl;
+			
 	return 0;
 }
 
