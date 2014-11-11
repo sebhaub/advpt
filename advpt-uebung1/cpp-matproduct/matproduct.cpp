@@ -50,15 +50,16 @@ public:
 				result[c][d] = sum;
 			}
 		}
-		cout << "RESULT IS " << endl << endl << result << endl << endl;
 		return result;
 	}
 
 	friend std::ostream& operator<<(std::ostream& stream, const Matrix &m)  {
 		for (unsigned int i = 0; i < m.rows; i++){
-			stream << endl;
 			for (unsigned int j = 0; j < m.columns; j++){
-				stream << " " << m.cells[i*m.columns + j] << " ";
+				stream << m.cells[i*m.columns + j] << " ";
+			}
+			if (i != m.rows - 1) {
+				stream << endl;
 			}
 		}
 
@@ -92,7 +93,7 @@ public:
 	}
 
 	long* operator[](int i){
-		//TODO 
+		// TODO: Dont just return offset the cells but return a sublist of references
 		long* result;
 		result = &this->cells[i*this->columns];
 		return result;
@@ -112,7 +113,7 @@ void getInputIntegral(long &number){
 	while (!(cin >> number)){
 		cin.clear();
 		cin.ignore(std::numeric_limits<long>::max(), '\n');
-		cout << "Invalid input.  Try again: ";
+		cout << ".";
 	}
 }
 
@@ -124,41 +125,30 @@ int main(int argc, char **argv)
 	long s3 = 0;
 	long tmp = 0;
 
-	cout << "Please enter the rows of Matrix A (s1)" << endl;
 	getInputIntegral(s1);
-	cout << "Please enter the columns of Matrix A (s2)" << endl;
 	getInputIntegral(s2);
-	cout << "Please enter the rows of Matrix B (s3)" << endl;
 	getInputIntegral(s3);
 
 
-	Matrix m = Matrix(s1, s2);
+	Matrix m1 = Matrix(s1, s2);
 	Matrix m2 = Matrix(s2, s3);
 
-	cout << "Now start entering the values of Matrix A" << endl;
 	for (int i = 0; i < s1; i++){
 		for (int j = 0; j < s2; j++){
-			cout << "Please enter value for [" << i << "][" << j << "] --> ";
 			getInputIntegral(tmp);
-			m[i][j] = tmp;
+			m1[i][j] = tmp;
 		}
 	}
 
-	cout << endl << endl << "Matrix A is " << endl << "--------------" << m << endl << "----------------" << endl << endl;
-
-	cout << "Now start entering the values of Matrix B" << endl;
 	for (int i = 0; i < s2; i++){
 		for (int j = 0; j < s3; j++){
-			cout << "Please enter value for [" << i << "][" << j << "] --> ";
 			getInputIntegral(tmp);
 			m2[i][j] = tmp;
 		}
 	}
 
-	cout << endl << endl << "Matrix B is " << endl << "--------------" << m2 << endl << "----------------" << endl << endl;
-
-	Matrix b = (m*m2);
-	cout << "RESULT IS " << endl << endl << endl << b << endl;
+	Matrix m3 = (m1*m2);
+	cout << m3 << endl;
 
 
 	return 0;
