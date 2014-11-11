@@ -2,12 +2,11 @@
 #include <cassert>
 #include <stdio.h>
 #include <string>
-#include <sstream>
+#include <limits>  
 
 using std::cout;
 using std::cin;
 using std::streamsize;
-using std::numeric_limits;
 using std::endl;
 
 class Matrix{
@@ -27,18 +26,17 @@ public:
 	}
 
 
-	Matrix Matrix::operator*(const int &other) {
+	Matrix operator*(const int &other) {
 		Matrix result(this->rows, this->columns);
 		for (unsigned int i = 0; i < this->rows; i++){
 			for (unsigned int j = 0; j < this->columns; j++){
 				this->cells[i*this->columns + j] *= other;
 			}
-
 		}
 		return result;
 	}
 
-	Matrix Matrix::operator*(const Matrix &other) {
+	Matrix operator*(const Matrix &other) {
 		assert(this->columns == other.rows);
 
 		Matrix result(this->rows, other.columns);
@@ -47,7 +45,6 @@ public:
 			for (unsigned int d = 0; d < other.columns; d++){
 				long sum = 0;
 				for (unsigned int k = 0; k < other.rows; k++){
-					long tmp = this->cells[c*this->columns+k];
 					sum += this->cells[c*this->columns+k] * other.cells[k*other.columns+d];
 				}
 				result[c][d] = sum;
@@ -61,7 +58,7 @@ public:
 		for (unsigned int i = 0; i < m.rows; i++){
 			stream << endl;
 			for (unsigned int j = 0; j < m.columns; j++){
-				stream << " | " << m.cells[i*m.columns + j] << " | ";
+				stream << " " << m.cells[i*m.columns + j] << " ";
 			}
 		}
 
@@ -69,7 +66,7 @@ public:
 		return stream;
 	}
 
-	Matrix &Matrix::operator=(const Matrix &other) {
+	Matrix &operator=(const Matrix &other) {
 		assert(this->columns == other.columns && this->rows == other.rows);
 		for (unsigned int i = 0; i < this->rows; i++){
 			for (unsigned int j = 0; j < this->columns; j++){
@@ -79,7 +76,7 @@ public:
 		return *this;
 	}
 
-	bool Matrix::operator==(const Matrix &other) {
+	bool operator==(const Matrix &other) {
 		assert(this->columns == other.columns && this->rows == other.rows);
 
 		for (unsigned int i = 0; i < this->rows; i++){
@@ -94,9 +91,10 @@ public:
 		return true;
 	}
 
-	long* Matrix::operator[](int j){
+	long* operator[](int i){
+		//TODO 
 		long* result;
-		result = &this->cells[j*this->columns];
+		result = &this->cells[i*this->columns];
 		return result;
 	}
 
@@ -105,15 +103,15 @@ public:
 
 private:
 	long* cells;
-	int rows;
-	int columns;
+	unsigned int rows;
+	unsigned int columns;
 };
 
 void getInputIntegral(long &number){
 	number = 0;
 	while (!(cin >> number)){
 		cin.clear();
-		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		cin.ignore(std::numeric_limits<long>::max(), '\n');
 		cout << "Invalid input.  Try again: ";
 	}
 }
@@ -160,7 +158,7 @@ int main(int argc, char **argv)
 	cout << endl << endl << "Matrix B is " << endl << "--------------" << m2 << endl << "----------------" << endl << endl;
 
 	Matrix b = (m*m2);
-	cout << "RESULT IS " << endl << endl << endl << m << endl;
+	cout << "RESULT IS " << endl << endl << endl << b << endl;
 
 
 	return 0;
