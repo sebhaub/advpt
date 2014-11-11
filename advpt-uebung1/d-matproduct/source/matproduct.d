@@ -2,6 +2,7 @@ import std.stdio;
 import std.getopt;
 import std.c.stdlib;
 import std.ascii;
+import std.conv;
 
 static bool quiet;
 
@@ -19,6 +20,7 @@ class Matrix {
 	{
 		if(op == "*") {
 			int[] m;
+			m.length = this.rows * other.cols;
 			Matrix result = new Matrix(this.rows, other.cols, m);
 
 			int sum = 0;
@@ -37,37 +39,44 @@ class Matrix {
 	}
 
 	public void opIndexAssign(int value, size_t row, size_t col) {
-		writefln("Got %s at [%s, %s].", value, row, col);
 		this.m[row * this.cols + col] = value;
 	}
-
+	
 	public size_t opIndex(size_t row, size_t col) {
 		return this.m[row * this.cols + col];
 	}
-
+	
 	override
 	public string toString() {
 		string result = "";
-
-		// TODO: Return a string representation of the matrix
-		// with whitespace and linebreaks after each row.
+		if(!quiet) { result ~= "The matrix looks like this:\n"; }
 
 		for(int row = 0; row < this.rows; ++row) {
 			for(int col = 0; col < this.cols; ++col) {
-				result ~= this[row, col];
+				result ~= to!(string)(this[row, col]);
 
 				bool addSpace = col != this.cols - 1;
 				if(addSpace) {
 					result ~= " ";
 				}
 			}
-
-			result ~= newline;
+			
+			if(row != this.rows - 1) { result ~= newline; }
 		}
 
 		return result;
 	}
 };
+
+static void readf_int(string s, int *obj) {	
+	
+	while(true) {
+		try {
+			readf(s, obj);
+			return;
+		} catch (std.conv.ConvException ex) {}
+	}
+}
 
 void main(string[] args) {
 	bool help;
@@ -80,23 +89,22 @@ void main(string[] args) {
 		exit(0);
 	}
 
-	// TODO: Handle input errors
-
 	int s1, s2, s3;
-	readf(" %s", &s1);
-	readf(" %s", &s2);
-	readf(" %s", &s3);
+	readf_int(" %s", &s1);
+	readf_int(" %s", &s2);
+	readf_int(" %s", &s3);
 
 	int[] first, second;
 	first.length = s1 * s2;
 	second.length = s2 * s3;
 
 	for(int i = 0; i < first.length; ++i) {
-		readf(" %s", &first[i]);
+		readf_int(" %s", &first[i]);
 	}
 	for(int i = 0; i < second.length; ++i) {
-		readf(" %s", &second[i]);
+		readf_int(" %s", &second[i]);
 	}
+	
 
 	Matrix a = new Matrix(s1, s2, first);
 	Matrix b = new Matrix(s2, s3, second);
