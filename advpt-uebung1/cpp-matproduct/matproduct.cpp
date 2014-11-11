@@ -41,18 +41,20 @@ public:
 	Matrix Matrix::operator*(const Matrix &other) {
 		assert(this->columns == other.rows);
 
-		Matrix neu(this->rows, other.columns);
+		Matrix result(this->rows, other.columns);
 
-		for (unsigned int i = 0; i < this->rows; i++){
-			for (unsigned int j = 0; j < other.columns; j++){
-				long sum = this->cells[i*this->columns] * other.cells[j];
-				for (unsigned int k = 1; k < this->columns; k++){
-					sum += this->cells[i*this->rows + k] * other.cells[k*this->rows + j];
+		for (unsigned int c = 0; c < this->rows; c++){
+			for (unsigned int d = 0; d < other.columns; d++){
+				long sum = 0;
+				for (unsigned int k = 0; k < other.rows; k++){
+					long tmp = this->cells[c*this->columns+k];
+					sum += this->cells[c*this->columns+k] * other.cells[k*other.columns+d];
 				}
-				neu.cells[i*this->rows + j] = sum;
+				result[c][d] = sum;
 			}
 		}
-		return neu;
+		cout << "RESULT IS " << endl << endl << result << endl << endl;
+		return result;
 	}
 
 	friend std::ostream& operator<<(std::ostream& stream, const Matrix &m)  {
@@ -68,23 +70,18 @@ public:
 	}
 
 	Matrix &Matrix::operator=(const Matrix &other) {
-		if (this->columns != other.columns || this->rows != other.rows){
-			return *this;
-		}
-		else{
-			for (unsigned int i = 0; i < this->rows; i++){
-				for (unsigned int j = 0; j < this->columns; j++){
-					this->cells[i*this->columns + j] = other.cells[i*this->columns + j];
-				}
+		assert(this->columns == other.columns && this->rows == other.rows);
+		for (unsigned int i = 0; i < this->rows; i++){
+			for (unsigned int j = 0; j < this->columns; j++){
+				this->cells[i*this->columns + j] = other.cells[i*this->columns + j];
 			}
-			return *this;
 		}
+		return *this;
 	}
 
 	bool Matrix::operator==(const Matrix &other) {
-		if (this->columns != other.columns || this->rows != other.rows){
-			return false;
-		}
+		assert(this->columns == other.columns && this->rows == other.rows);
+
 		for (unsigned int i = 0; i < this->rows; i++){
 			for (unsigned int j = 0; j < this->columns; j++){
 				if (this->cells[i*this->columns + j] == other.cells[i*this->columns + j])
@@ -124,17 +121,47 @@ void getInputIntegral(long &number){
 
 int main(int argc, char **argv)
 {
-	long a = 0;
-	long b = 0;
-	getInputIntegral(a);
-	getInputIntegral(b);
+	long s1 = 0;
+	long s2 = 0;
+	long s3 = 0;
+	long tmp = 0;
 
-	Matrix m = Matrix(a, b);
+	cout << "Please enter the rows of Matrix A (s1)" << endl;
+	getInputIntegral(s1);
+	cout << "Please enter the columns of Matrix A (s2)" << endl;
+	getInputIntegral(s2);
+	cout << "Please enter the rows of Matrix B (s3)" << endl;
+	getInputIntegral(s3);
 
-	m[0][0] = 37;
-	m[0][1] = 42;
-	m[3][3] = 32;
-	cout << m << endl;
+
+	Matrix m = Matrix(s1, s2);
+	Matrix m2 = Matrix(s2, s3);
+
+	cout << "Now start entering the values of Matrix A" << endl;
+	for (int i = 0; i < s1; i++){
+		for (int j = 0; j < s2; j++){
+			cout << "Please enter value for [" << i << "][" << j << "] --> ";
+			getInputIntegral(tmp);
+			m[i][j] = tmp;
+		}
+	}
+
+	cout << endl << endl << "Matrix A is " << endl << "--------------" << m << endl << "----------------" << endl << endl;
+
+	cout << "Now start entering the values of Matrix B" << endl;
+	for (int i = 0; i < s2; i++){
+		for (int j = 0; j < s3; j++){
+			cout << "Please enter value for [" << i << "][" << j << "] --> ";
+			getInputIntegral(tmp);
+			m2[i][j] = tmp;
+		}
+	}
+
+	cout << endl << endl << "Matrix B is " << endl << "--------------" << m2 << endl << "----------------" << endl << endl;
+
+	Matrix b = (m*m2);
+	cout << "RESULT IS " << endl << endl << endl << m << endl;
+
 
 	return 0;
 }
